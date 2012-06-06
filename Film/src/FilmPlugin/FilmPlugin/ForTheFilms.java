@@ -31,6 +31,7 @@ public class ForTheFilms extends JavaPlugin implements Listener
 {
 	
 	// {{ Blocks
+	//does it work?
 	public static CustomBlock nothing;
     public static CustomBlock GreenScreen;
     public static CustomBlock RedScreen;
