@@ -29,8 +29,7 @@ import Blocks.FlamingParent;
 import Blocks.ScreenParent;
 public class ForTheFilms extends JavaPlugin implements Listener
 {
-	//test
-	// {{ Blocks
+	//Blocks
     public static CustomBlock GreenScreen;
     public static CustomBlock RedScreen;
     public static CustomBlock BlueScreen;
@@ -45,16 +44,13 @@ public class ForTheFilms extends JavaPlugin implements Listener
     public static CustomBlock FlamingPlanks;
     public static CustomBlock FlamingLog;
     public static CustomBlock InvisibleBlock;
-    public static CustomBlock doesitwork;
-    // }}
     
-    // {{ Textures
+    //Textures
     public static Texture greenScreenTexture;
     public static Texture redScreenTexture;
     public static Texture blueScreenTexture;
     public static Texture multiTexture;
-    // }}
-    
+
     private FileConfiguration blockSettings = null;
     private File blockSettingsFile = null;
     private static ForTheFilms instance;
@@ -68,8 +64,7 @@ public class ForTheFilms extends JavaPlugin implements Listener
     public byte preSceneData;
     public Location loc1;
     public Location loc2;
-	// {{ onEnable and disable
-	
+    
     public void onEnable()
     {        
         log = Logger.getLogger("Minecraft"); 
@@ -155,10 +150,6 @@ public class ForTheFilms extends JavaPlugin implements Listener
 	   }
    }
    
-   
-   
-   
-    // {{ setups Blocks and Textures
     public void setupTextures() {
     	multiTexture = new Texture(this, "http://dl.dropbox.com/s/aaord2ibg0awtmg/terrain.png",256,256,16);
     }
@@ -192,26 +183,23 @@ public class ForTheFilms extends JavaPlugin implements Listener
         	if(InvisibleBlock==null)
         InvisibleBlock = new mBlockParent(this,multiTexture,"InvisiBlock",new int[]{10,10,10,10,10,10});
     }
-    // }}
 	public static ForTheFilms getInstance()
 	{
 		return instance;
 	}   
 
-		// {{ Commands
+		//Commands
 	
-		// {{ Commands Override
+		//Commands Override
     @Override public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         String commandName = command.getName().toLowerCase(); 
  
         if (!(sender instanceof Player)) {
             sender.sendMessage("/" + commandName + " can only be run from in game.");
             return true;
-        }
-        // }}      
+        }   
         
-        // {{ Marker Sign
-        
+        //Marker Sign
         
         if (commandName.equals("setcam")){
         	if(camera!=null){
@@ -315,9 +303,8 @@ public class ForTheFilms extends JavaPlugin implements Listener
         	return true;
         }
         
-        // {{ Time Commands
-        
-        
+        //Time Commands
+               
         if (commandName.equals("day")){
         	Player player = (Player) sender;
             player.getWorld().setTime(0);
@@ -328,14 +315,13 @@ public class ForTheFilms extends JavaPlugin implements Listener
             player.getWorld().setTime(14000);
             return true;
             }
-        // }}
+
         if (commandName.equals("hungry")){
         	Player player = (Player) sender;
             player.setFoodLevel(1);
             return true;
             }
-        // {{ Weather Commands
-
+        //Weather Commands
         
         if (commandName.equals("sun")){
         	Player player = (Player) sender;
@@ -347,11 +333,9 @@ public class ForTheFilms extends JavaPlugin implements Listener
             player.getWorld().setStorm(true);
             return true;
             }
-        // }}
         
-        // {{ Explosion NEEDS WORK
-
-        
+        //Explosion NEEDS WORK
+       
         if (commandName.equals("boom")){
         	Player player;
         	if(args.length<1){
@@ -393,10 +377,8 @@ public class ForTheFilms extends JavaPlugin implements Listener
         	player.getWorld().createExplosion(player.getLocation(),0);
             return true;
         }
-  
-        // }}
     
-        // {{ Reload EITHER DEPRICATE OR IMPROVE
+        //Reload EITHER DEPRICATE OR IMPROVE
         
         if (commandName.equals("filmreload")){
         	reloadConfig();
@@ -406,14 +388,12 @@ public class ForTheFilms extends JavaPlugin implements Listener
         	}
         	return true;
         }
-    
-        // }}
-
-        // {{ Spout Commands
+        
+        //Spout Commands
         
         if (useSpout){   
         	
-        // {{ Skin Commands
+        //Skin Commands
         	
         	if (commandName.equals("setskin")){
         		String skin;
@@ -461,9 +441,8 @@ public class ForTheFilms extends JavaPlugin implements Listener
             	}
             	return true;
         	}
-        // }}
-        	
-        // {{ Cape Commands
+
+        	//Cape Commands
         	
         	if (commandName.equals("setcape")){
         		String cape;
@@ -497,7 +476,7 @@ public class ForTheFilms extends JavaPlugin implements Listener
             	}
             	return true;
         	}
-        // }}
+
         	if (commandName.equals("invisible")){
         		if(args.length>0){
         		Player player = Bukkit.getServer().getPlayer(args[0]);
@@ -577,7 +556,5 @@ public class ForTheFilms extends JavaPlugin implements Listener
         }
     return false;
     }
-    // }}
-    // }}
     Logger log;     
 }
