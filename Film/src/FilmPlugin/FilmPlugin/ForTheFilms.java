@@ -53,7 +53,6 @@ public class ForTheFilms extends JavaPlugin implements Listener
 
     private FileConfiguration blockSettings = null;
     private File blockSettingsFile = null;
-    private static ForTheFilms instance;
     public HashMap<String, Integer> entityID;
     public boolean useSpout;
     public Player camera = null;
@@ -183,11 +182,6 @@ public class ForTheFilms extends JavaPlugin implements Listener
         	if(InvisibleBlock==null)
         InvisibleBlock = new mBlockParent(this,multiTexture,"InvisiBlock",new int[]{10,10,10,10,10,10});
     }
-	public static ForTheFilms getInstance()
-	{
-		return instance;
-	}   
-
 		//Commands
 	
 		//Commands Override
