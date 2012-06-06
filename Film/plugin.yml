@@ -1,0 +1,82 @@
+name: 4TheFilms
+version:  Beta v0.2
+author: TheTrooble
+description: Film plugin!
+main: FilmPlugin.FilmPlugin.ForTheFilms
+depend:
+commands:
+   scene:
+      description: Places sign stating scene# and take#
+      usage: /<command> [scene#] [take#]
+   setcam:
+      description: State the name of the player recording
+      usage: /<command> [player]
+   mark:
+      description: Removes sign and replaces block that the sign removes
+      usage: /<command>
+   day:
+      description: Sets time to day
+      usage: /<command>
+   night:
+      description: Sets time to night
+      usage: /<command>
+   sun:
+      description: Sets weather to sunny
+      usage: /<command>
+   rain:
+      description: Sets weather to rain
+      usage: /<command>
+   setproject:
+      description: Sets weather to rain
+      usage: /<command>
+   boom:
+      description: Creates an explosion
+      usage: /<command>
+   setskin:
+      description: Changes the skin of a player
+      usage: /<command> [player] [URL]
+   resetskin:
+      description: Resets the skin of a player
+      usage: /<command> [player]
+   stealskin:
+      description: Resets the skin of a player
+      usage: /<command> [player]
+   setcape:
+      description: Changes the cape of a player
+      usage: /<command> [player] [URL]
+   resetcape:
+      description: Resets the cape of a player
+      usage: /<command> [player]
+   invisible:
+      description: Turns you invisible
+      usage: /<command> [player]
+   resetplayer:
+      descrition: Resets you
+      usage: /<command> [player]
+   setname:
+      description: Changes the title of a player
+      usage: /<command> [player] [new name]
+   resetname:
+      description: Resets the title of a player
+      usage: /<command> [player]
+   hidename:
+      description: Hides the title of a player
+      usage: /<command> [player]
+   filmreload:
+      description: Reloads the config file
+      usage: /<command>
+   hungry:
+      description: turns of green blocks(maybe)
+      usage: /<command>
+   vanish:
+      description: Vanish in a plume of smoke
+      usage: /<command> [player]
+   appear:
+      description: Vanish in a plume of smoke
+      usage: /<command> [player]
+   tp:
+      description: teleport you to another player
+      usage: /<command> [player] [player]
+   tpboom:
+      description: teleport you to another player explosively
+      usage: /<command> [player] [player]
