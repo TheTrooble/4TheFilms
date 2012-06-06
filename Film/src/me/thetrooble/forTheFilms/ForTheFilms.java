@@ -1,11 +1,14 @@
-package FilmPlugin.FilmPlugin;
+package me.thetrooble.forTheFilms;
  
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import mblocks.mBlockParent;
+import me.thetrooble.forTheFilms.blocks.FlamingParent;
+import me.thetrooble.forTheFilms.blocks.ScreenParent;
+import me.thetrooble.forTheFilms.blocks.mBlockParent;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -25,8 +28,6 @@ import org.getspout.spoutapi.block.design.Texture;
 import org.getspout.spoutapi.material.CustomBlock;
 import org.getspout.spoutapi.player.SpoutPlayer;
 import java.util.HashMap;
-import Blocks.FlamingParent;
-import Blocks.ScreenParent;
 public class ForTheFilms extends JavaPlugin implements Listener
 {
 	//Blocks

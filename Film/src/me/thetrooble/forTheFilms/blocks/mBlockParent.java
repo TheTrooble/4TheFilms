@@ -1,4 +1,4 @@
-package mblocks;
+package me.thetrooble.forTheFilms.blocks;
  
 
 import org.bukkit.plugin.Plugin;
