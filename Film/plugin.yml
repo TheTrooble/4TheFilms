@@ -80,3 +80,10 @@ commands:
    tpboom:
       description: teleport you to another player explosively
       usage: /<command> [player] [player]
+   swap:
+   boomswap:
+   swapboom:
+   tele:
+   teleport:
+   boomtp:
+   teleboom:

@@ -263,7 +263,7 @@ public class ForTheFilms extends JavaPlugin implements Listener
             return true;
             }
         // }}
-        if (commandName.equals("tp")){
+        if (commandName.equals("tp")||commandName.equals("tele")||commandName.equals("teleport")){
         	Player player1;
         	Player player2;
         	if(args.length>1){
@@ -278,7 +278,43 @@ public class ForTheFilms extends JavaPlugin implements Listener
         	player1.teleport(loc);
         	return true;
         }
-        if (commandName.equals("tpboom")){
+        if (commandName.equals("swap")){
+        	Player player1;
+        	Player player2;
+        	if(args.length>1){
+        		player1 = Bukkit.getServer().getPlayer(args[0]);
+        		player2 = Bukkit.getServer().getPlayer(args[1]);
+        	}
+        	else{
+        		player1 = (Player)sender;
+        		player2 = Bukkit.getServer().getPlayer(args[0]);
+        	}
+        	Location loc1 = player1.getLocation();
+        	Location loc2 = player2.getLocation();
+        	player1.teleport(loc2);
+        	player2.teleport(loc1);
+        	return true;
+        }
+        if (commandName.equals("swapboom")||commandName.equals("boomswap")){
+        	Player player1;
+        	Player player2;
+        	if(args.length>1){
+        		player1 = Bukkit.getServer().getPlayer(args[0]);
+        		player2 = Bukkit.getServer().getPlayer(args[1]);
+        	}
+        	else{
+        		player1 = (Player)sender;
+        		player2 = Bukkit.getServer().getPlayer(args[0]);
+        	}
+        	Location loc1 = player1.getLocation();
+        	Location loc2 = player2.getLocation();
+        	player1.getWorld().createExplosion(loc1,0);
+        	player2.getWorld().createExplosion(loc2,0);
+        	player1.teleport(loc2);
+        	player2.teleport(loc1);
+        	return true;
+        }
+        if (commandName.equals("tpboom")||commandName.equals("boomtp")||commandName.equals("teleboom")){
         	Player player1;
         	Player player2;
         	if(args.length>1){
