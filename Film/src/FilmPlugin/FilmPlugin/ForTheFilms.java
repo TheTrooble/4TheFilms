@@ -29,7 +29,7 @@ import Blocks.FlamingParent;
 import Blocks.ScreenParent;
 public class ForTheFilms extends JavaPlugin implements Listener
 {
-	
+	//test
 	// {{ Blocks
     public static CustomBlock GreenScreen;
     public static CustomBlock RedScreen;
@@ -45,6 +45,7 @@ public class ForTheFilms extends JavaPlugin implements Listener
     public static CustomBlock FlamingPlanks;
     public static CustomBlock FlamingLog;
     public static CustomBlock InvisibleBlock;
+    public static CustomBlock doesitwork;
     // }}
     
     // {{ Textures
