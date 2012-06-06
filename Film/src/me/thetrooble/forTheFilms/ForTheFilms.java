@@ -52,6 +52,7 @@ public class ForTheFilms extends JavaPlugin implements Listener
     public static Texture blueScreenTexture;
     public static Texture multiTexture;
 
+	public static String invis = "http://dl.dropbox.com/s/fktmeor9m9rd19w/invisiskin.png";
     private FileConfiguration blockSettings = null;
     private File blockSettingsFile = null;
     public HashMap<String, Integer> entityID;
@@ -84,6 +85,12 @@ public class ForTheFilms extends JavaPlugin implements Listener
     	getConfig().addDefault("General.Blocks.Flaming.Black",false);
     	getConfig().addDefault("General.Blocks.Flaming.Filth",false);
     	getConfig().addDefault("General.Blocks.Tardis",true);
+    	getConfig().addDefault("General.Blocks.Screens.Red",true);
+    	getConfig().addDefault("General.Blocks.Screens.Blue",true);
+    	getConfig().addDefault("General.Blocks.Screens.Green",true);
+    	getConfig().addDefault("General.Blocks.Screens.RedTracker",true);
+    	getConfig().addDefault("General.Blocks.Screens.BlueTracker",true);
+    	getConfig().addDefault("General.Blocks.Screens.GreenTracker",true);
     	getConfig().options().copyDefaults(true);
     	this.saveConfig();
     	reloadBlockSettings();
@@ -155,15 +162,26 @@ public class ForTheFilms extends JavaPlugin implements Listener
     }
     
     public void setupBlocks() {
-    	if(GreenScreen==null){
+    	//Green Screen
+    	if(getConfig().getBoolean("General.Blocks.Screens.Green") && GreenScreen==null)
         GreenScreen = new ScreenParent(this,multiTexture,"Green Screen",blockSettings.getInt("Blocks.Screens.Green.LightLevel"), blockSettings.getBoolean("Blocks.Screens.Green.InhibitsLight"), new int[]{16,16,16,16,16,16}); 
-        GreenTracker = new ScreenParent(this,multiTexture,"Green Tracker",blockSettings.getInt("Blocks.Screens.Green.LightLevel"), blockSettings.getBoolean("Blocks.Screens.Green.InhibitsLight"),new int[]{19,19,19,19,19,19}); 
-        RedScreen = new ScreenParent(this,multiTexture,"Red Screen",blockSettings.getInt("Blocks.Screens.Red.LightLevel"), blockSettings.getBoolean("Blocks.Screens.Green.InhibitsLight"),new int[]{17,17,17,17,17,17}); 
-        RedTracker = new ScreenParent(this,multiTexture,"Red Tracker",blockSettings.getInt("Blocks.Screens.Red.LightLevel"), blockSettings.getBoolean("Blocks.Screens.Green.InhibitsLight"),new int[]{20,20,20,20,20,20}); 
+    	//Green Tracker
+    	if(getConfig().getBoolean("General.Blocks.Screens.GreenTracker") && GreenTracker==null)
+    	GreenTracker = new ScreenParent(this,multiTexture,"Green Tracker",blockSettings.getInt("Blocks.Screens.Green.LightLevel"), blockSettings.getBoolean("Blocks.Screens.Green.InhibitsLight"),new int[]{19,19,19,19,19,19}); 
+    	//Red Screen
+    	if(getConfig().getBoolean("General.Blocks.Screens.Red") && RedScreen==null)
+    	RedScreen = new ScreenParent(this,multiTexture,"Red Screen",blockSettings.getInt("Blocks.Screens.Red.LightLevel"), blockSettings.getBoolean("Blocks.Screens.Green.InhibitsLight"),new int[]{17,17,17,17,17,17}); 
+    	//Red Tracker
+    	if(getConfig().getBoolean("General.Blocks.Screens.RedTracker") && RedTracker==null)
+    	RedTracker = new ScreenParent(this,multiTexture,"Red Tracker",blockSettings.getInt("Blocks.Screens.Red.LightLevel"), blockSettings.getBoolean("Blocks.Screens.Green.InhibitsLight"),new int[]{20,20,20,20,20,20}); 
+    	//Blue Screen
+    	if(getConfig().getBoolean("General.Blocks.Screens.Blue") && BlueScreen==null)
         BlueScreen = new ScreenParent(this,multiTexture,"Blue Screen",blockSettings.getInt("Blocks.Screens.Blue.LightLevel"), blockSettings.getBoolean("Blocks.Screens.Green.InhibitsLight"),new int[]{18,18,18,18,18,18});
-        BlueTracker = new ScreenParent(this,multiTexture,"Blue Tracker",blockSettings.getInt("Blocks.Screens.Blue.LightLevel"), blockSettings.getBoolean("Blocks.Screens.Green.InhibitsLight"),new int[]{21,21,21,21,21,21});
-    	}
-        //Tardis
+    	//Blue Tracker
+    	if(getConfig().getBoolean("General.Blocks.Screens.BlueScreen") && BlueTracker==null)
+    	BlueTracker = new ScreenParent(this,multiTexture,"Blue Tracker",blockSettings.getInt("Blocks.Screens.Blue.LightLevel"), blockSettings.getBoolean("Blocks.Screens.Green.InhibitsLight"),new int[]{21,21,21,21,21,21});
+        
+    	//Tardis
         if(getConfig().getBoolean("General.Blocks.Tardis")&&TardisBottom==null){
         TardisBottom= new mBlockParent(this,multiTexture,"Tardis Bottom", new int[]{0,1,1,1,1,0});
         TardisTop= new mBlockParent(this,multiTexture,"Tardis Top", new int[]{0,3,2,3,3,0});
@@ -387,8 +405,8 @@ public class ForTheFilms extends JavaPlugin implements Listener
         	player = Bukkit.getServer().getPlayer(args[0]);
         	}
         	SpoutPlayer splayer = (SpoutPlayer) player;
-        	splayer.setSkin("http://dl.dropbox.com/s/fktmeor9m9rd19w/invisiskin.png");
-    		splayer.setCape("http://dl.dropbox.com/s/fktmeor9m9rd19w/invisiskin.png");
+        	splayer.setSkin(invis);
+    		splayer.setCape(invis);
     		splayer.hideTitle();
         	player.getWorld().createExplosion(player.getLocation(),0);
             return true;
@@ -512,15 +530,15 @@ public class ForTheFilms extends JavaPlugin implements Listener
         		if(args.length>0){
         		Player player = Bukkit.getServer().getPlayer(args[0]);
         		SpoutPlayer splayer = (SpoutPlayer) player;
-        		splayer.setSkin("http://dl.dropbox.com/s/fktmeor9m9rd19w/invisiskin.png");
-        		splayer.setCape("http://dl.dropbox.com/s/fktmeor9m9rd19w/invisiskin.png");
+        		splayer.setSkin(invis);
+        		splayer.setCape(invis);
         		splayer.hideTitle();
         	}
         	else{
         		Player player = (Player) sender;
         		SpoutPlayer splayer = (SpoutPlayer) player;
-        		splayer.setSkin("http://dl.dropbox.com/s/fktmeor9m9rd19w/invisiskin.png");
-        		splayer.setCape("http://dl.dropbox.com/s/fktmeor9m9rd19w/invisiskin.png");
+        		splayer.setSkin(invis);
+        		splayer.setCape(invis);
         		splayer.hideTitle();
         	}
         		return true;
