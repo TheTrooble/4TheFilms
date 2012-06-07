@@ -89,3 +89,8 @@ commands:
    teleboom:
    action:
    fling:
+   tphere:
+   telehere:
+   teleporthere:
+   tpme:
+   tph:

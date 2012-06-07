@@ -72,7 +72,6 @@ public class ForTheFilms extends JavaPlugin implements Listener
         pluginManager.registerEvents(this,this);
         useSpout = false;
         Plugin spout = pluginManager.getPlugin("Spout"); 	
-        
                
         
         
@@ -296,6 +295,21 @@ public class ForTheFilms extends JavaPlugin implements Listener
         	player1.teleport(loc);
         	return true;
         }
+        if (commandName.equals("tphere")||commandName.equals("telehere")||commandName.equals("teleporthere")||commandName.equals("tpme")||commandName.equals("tph")){
+        	Player player1;
+        	Player player2;
+        	if(args.length>1){
+        		player1 = Bukkit.getServer().getPlayer(args[0]);
+        		player2 = Bukkit.getServer().getPlayer(args[1]);
+        	}
+        	else{
+        		player1 = (Player)sender;
+        		player2 = Bukkit.getServer().getPlayer(args[0]);
+        	}
+        	Location loc = player1.getLocation();
+        	player2.teleport(loc);
+        	return true;
+        }
         if (commandName.equals("swap")){
         	Player player1;
         	Player player2;
@@ -443,8 +457,8 @@ public class ForTheFilms extends JavaPlugin implements Listener
         if (commandName.equals("filmreload")){
         	reloadConfig();
         	if(useSpout){
-        		setupBlocks();
-        		setupTextures();
+        		setupBlocks();//Any blocks without a check for null will double generate
+        		setupTextures();//whereas any blocks WITH a check for null will not change 
         	}
         	return true;
         }
