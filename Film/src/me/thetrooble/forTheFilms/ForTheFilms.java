@@ -24,6 +24,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.util.Vector;
 import org.getspout.spoutapi.block.design.Texture;
 import org.getspout.spoutapi.material.CustomBlock;
 import org.getspout.spoutapi.player.SpoutPlayer;
@@ -47,9 +48,6 @@ public class ForTheFilms extends JavaPlugin implements Listener
     public static CustomBlock InvisibleBlock;
     
     //Textures
-    public static Texture greenScreenTexture;
-    public static Texture redScreenTexture;
-    public static Texture blueScreenTexture;
     public static Texture multiTexture;
 
 	public static String invis = "http://dl.dropbox.com/s/fktmeor9m9rd19w/invisiskin.png";
@@ -210,7 +208,8 @@ public class ForTheFilms extends JavaPlugin implements Listener
         if (!(sender instanceof Player)) {
             sender.sendMessage("/" + commandName + " can only be run from in game.");
             return true;
-        }   
+        }
+        
         
         //Marker Sign
         
@@ -275,7 +274,7 @@ public class ForTheFilms extends JavaPlugin implements Listener
             sign.update();
             return true;
         }
-        if (commandName.equals("mark")){
+        if (commandName.equals("mark")||commandName.equals("action")){
             Block b = camera.getWorld().getBlockAt(marker);
             b.setType(preScene);
             b.setData(preSceneData);
@@ -350,6 +349,18 @@ public class ForTheFilms extends JavaPlugin implements Listener
         	player2.getWorld().createExplosion(loc2,0);
         	player1.teleport(loc2);
         	return true;
+        }
+        //Fling, VERY expirimental
+        if (commandName.equals("fling")){
+        	Player player;
+        	Vector vec = new Vector(5,5,5);
+        	if(args.length>1){
+        		player = Bukkit.getServer().getPlayer(args[0]);
+        	}
+        	else{
+        		player = (Player)sender;
+        	}
+       		player.setVelocity(vec);
         }
         
         //Time Commands

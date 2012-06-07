@@ -87,3 +87,5 @@ commands:
    teleport:
    boomtp:
    teleboom:
+   action:
+   fling:
