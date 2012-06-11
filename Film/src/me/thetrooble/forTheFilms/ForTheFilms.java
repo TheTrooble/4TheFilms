@@ -53,6 +53,8 @@ public class ForTheFilms extends JavaPlugin implements Listener
 	public static String invis = "http://dl.dropbox.com/s/fktmeor9m9rd19w/invisiskin.png";
     private FileConfiguration blockSettings = null;
     private File blockSettingsFile = null;
+    private FileConfiguration characters = null;
+    private File charactersFile = null;
     public HashMap<String, Integer> entityID;
     public boolean useSpout;
     public Player camera = null;
@@ -99,10 +101,22 @@ public class ForTheFilms extends JavaPlugin implements Listener
     	blockSettings.addDefault("Blocks.Screens.Blue.InhibitsLight",true);
     	blockSettings.options().copyDefaults(true);//thanks to AlbireoX
     	saveBlockSettings();
-        
-    	
-    	
-    	
+    	reloadCharacters();
+    	characters.addDefault("Characters.Notch.Name", "Notch");
+    	characters.addDefault("Characters.Notch.Skin", "http://www.minecraftskins.info/notch.png");
+        characters.addDefault("Characters.Notch.Cape", "http://www.mccapes.com/GalleryImages6x/a7dec9be00ba751a0a95197eb84847df.png");
+    	characters.addDefault("Characters.Expendable.Name", "Expendable");
+    	characters.addDefault("Characters.Expendable.Skin", "http://www.minecraftskins.info/startrekred.png");
+    	characters.addDefault("Characters.Batman.Name", "The God Damn Batman");
+    	characters.addDefault("Characters.Batman.Skin", "http://www.minecraftskins.info/batman.png");
+    	characters.addDefault("Characters.Herobrine.Name", "Herobrine");
+    	characters.addDefault("Characters.Herobrine.Skin", "http://www.minecraftskins.info/herobrine.png");
+    	characters.addDefault("Characters.Tree.Name", "");
+    	characters.addDefault("Characters.Tree.Skin", "http://www.minecraftskins.info/tree.png");
+    	characters.addDefault("Characters.Steve.Name", "Steve");
+    	characters.addDefault("Characters.Steve.Skin","http://www.minecraft.net/images/char.png");
+    	characters.options().copyDefaults(true);
+    	saveCharacters();
     	
     	
     	if( spout != null ){
@@ -153,7 +167,32 @@ public class ForTheFilms extends JavaPlugin implements Listener
 		   Logger.getLogger(JavaPlugin.class.getName()).log(Level.SEVERE, "Could not save config to " + blockSettingsFile, ex);
 	   }
    }
-   
+   public void reloadCharacters() {
+  	if (charactersFile == null){
+  		charactersFile = new File(getDataFolder(), "characters.yml");
+  	}
+  	characters = YamlConfiguration.loadConfiguration(charactersFile);
+  	InputStream defConfigStream = getResource("characters.yml");
+  	if (defConfigStream != null) {
+  		YamlConfiguration defConfig = YamlConfiguration.loadConfiguration(defConfigStream);
+  		characters.setDefaults(defConfig);
+  	}  	
+  }
+  
+ public FileConfiguration getcharacters() {
+	   if (characters == null){
+		   reloadCharacters();
+	   }
+	   return characters;
+ }
+  
+ public void saveCharacters(){
+	   try {
+		   characters.save(charactersFile);
+	   } catch (IOException ex) {
+		   Logger.getLogger(JavaPlugin.class.getName()).log(Level.SEVERE, "Could not save config to " + charactersFile, ex);
+	   }
+ }
     public void setupTextures() {
     	multiTexture = new Texture(this, "http://dl.dropbox.com/s/aaord2ibg0awtmg/terrain.png",256,256,16);
     }
@@ -626,6 +665,18 @@ public class ForTheFilms extends JavaPlugin implements Listener
             		splayer.hideTitle();
             	}
             	return true;
+        	}
+        	if (commandName.equals("setchar")){
+        		Player player = (Player) sender;
+        		SpoutPlayer splayer = (SpoutPlayer) player;
+        		if(characters.getString("Characters." + args[0] + ".Name")!=null)
+        			splayer.setTitle(characters.getString("Characters." + args[0] + ".Name"));
+        		if(characters.getString("Characters." + args[0] + ".Skin")!=null)
+        			splayer.setSkin(characters.getString("Characters." + args[0] + ".Skin"));
+        		if(characters.getString("Characters." + args[0] + ".Cape")!=null)
+        			splayer.setCape(characters.getString("Characters." + args[0] + ".Cape"));
+        		else
+        			splayer.setCape(invis);
         	}
         }
     return false;

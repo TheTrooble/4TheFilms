@@ -1,8 +1,8 @@
 name: 4TheFilms
-version:  Beta v0.2
+version:  Beta v0.2.5
 author: TheTrooble
 description: Film plugin!
-main: FilmPlugin.FilmPlugin.ForTheFilms
+main: me.thetrooble.forTheFilms.ForTheFilms
 depend:
 commands:
    scene:
@@ -94,3 +94,4 @@ commands:
    teleporthere:
    tpme:
    tph:
+   setchar:
