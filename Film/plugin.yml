@@ -95,3 +95,6 @@ commands:
    tpme:
    tph:
    setchar:
+   setcharname:
+   setcharskin:
+   setcharcape:

@@ -167,6 +167,7 @@ public class ForTheFilms extends JavaPlugin implements Listener
 		   Logger.getLogger(JavaPlugin.class.getName()).log(Level.SEVERE, "Could not save config to " + blockSettingsFile, ex);
 	   }
    }
+   
    public void reloadCharacters() {
   	if (charactersFile == null){
   		charactersFile = new File(getDataFolder(), "characters.yml");
@@ -179,21 +180,22 @@ public class ForTheFilms extends JavaPlugin implements Listener
   	}  	
   }
   
- public FileConfiguration getcharacters() {
+   public FileConfiguration getcharacters() {
 	   if (characters == null){
 		   reloadCharacters();
 	   }
 	   return characters;
  }
   
- public void saveCharacters(){
+   public void saveCharacters(){
 	   try {
 		   characters.save(charactersFile);
 	   } catch (IOException ex) {
 		   Logger.getLogger(JavaPlugin.class.getName()).log(Level.SEVERE, "Could not save config to " + charactersFile, ex);
 	   }
  }
-    public void setupTextures() {
+   
+   public void setupTextures() {
     	multiTexture = new Texture(this, "http://dl.dropbox.com/s/aaord2ibg0awtmg/terrain.png",256,256,16);
     }
     
@@ -677,6 +679,22 @@ public class ForTheFilms extends JavaPlugin implements Listener
         			splayer.setCape(characters.getString("Characters." + args[0] + ".Cape"));
         		else
         			splayer.setCape(invis);
+        		return true;
+        	}
+        	if (commandName.equals("setcharname"))
+        	{
+        		characters.set("Characters." + args[0] + ".Name", args[1]);
+        		return true;
+        	}
+        	if (commandName.equals("setcharskin"))
+        	{
+        		characters.set("Characters." + args[0] + ".Skin", args[1]);
+        		return true;
+        	}
+        	if (commandName.equals("setcharcape"))
+        	{
+        		characters.set("Characters." + args[0] + ".Cape", args[1]);
+        		return true;
         	}
         }
     return false;
