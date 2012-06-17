@@ -102,19 +102,14 @@ public class ForTheFilms extends JavaPlugin implements Listener
     	blockSettings.options().copyDefaults(true);//thanks to AlbireoX
     	saveBlockSettings();
     	reloadCharacters();
-    	characters.addDefault("Characters.Notch.Name", "Notch");
-    	characters.addDefault("Characters.Notch.Skin", "http://www.minecraftskins.info/notch.png");
-        characters.addDefault("Characters.Notch.Cape", "http://www.mccapes.com/GalleryImages6x/a7dec9be00ba751a0a95197eb84847df.png");
     	characters.addDefault("Characters.Expendable.Name", "Expendable");
     	characters.addDefault("Characters.Expendable.Skin", "http://www.minecraftskins.info/startrekred.png");
-    	characters.addDefault("Characters.Batman.Name", "The God Damn Batman");
-    	characters.addDefault("Characters.Batman.Skin", "http://www.minecraftskins.info/batman.png");
     	characters.addDefault("Characters.Herobrine.Name", "Herobrine");
     	characters.addDefault("Characters.Herobrine.Skin", "http://www.minecraftskins.info/herobrine.png");
-    	characters.addDefault("Characters.Tree.Name", "");
-    	characters.addDefault("Characters.Tree.Skin", "http://www.minecraftskins.info/tree.png");
     	characters.addDefault("Characters.Steve.Name", "Steve");
     	characters.addDefault("Characters.Steve.Skin","http://www.minecraft.net/images/char.png");
+    	characters.addDefault("Characters.Batman.Name", "The God Damn Batman");
+    	characters.addDefault("Characters.Batman.Skin", "http://www.minecraftskins.info/batman.png");
     	characters.options().copyDefaults(true);
     	saveCharacters();
     	
@@ -237,7 +232,7 @@ public class ForTheFilms extends JavaPlugin implements Listener
         	if(getConfig().getBoolean("General.Blocks.Flaming.Log")&&FlamingLog==null)
         FlamingLog= new FlamingParent(this,multiTexture,"Flaming Log",new int[]{9,8,8,8,8,9});
         	if(InvisibleBlock==null)
-        InvisibleBlock = new mBlockParent(this,multiTexture,"InvisiBlock",new int[]{10,10,10,10,10,10});
+        InvisibleBlock = new ScreenParent(this,multiTexture,"Invisiblock",0,false,new int[]{10,10,10,10,10,10});
     }
 		//Commands
 	
@@ -445,10 +440,24 @@ public class ForTheFilms extends JavaPlugin implements Listener
             }
         if (commandName.equals("rain")){
         	Player player = (Player) sender;
+        	if(args.length<1)
             player.getWorld().setStorm(true);
+        	else{
+//        		long del = (long)args[0];
+//            this.getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
+//            	   public void run() {
+//            	       getServer().broadcastMessage("This message is broadcast by the main thread");
+//            	   }
+//            	}, );
+        	}
             return true;
             }
-        
+        if (commandName.equals("sunnyday")){
+        	Player player = (Player) sender;
+            player.getWorld().setTime(0);
+            player.getWorld().setStorm(false);
+            return true;
+        }
         //Explosion NEEDS WORK
        
         if (commandName.equals("boom")){
@@ -593,15 +602,16 @@ public class ForTheFilms extends JavaPlugin implements Listener
         	}
 
         	if (commandName.equals("invisible")){
+        		Player player;
         		if(args.length>0){
-        		Player player = Bukkit.getServer().getPlayer(args[0]);
+        		player = Bukkit.getServer().getPlayer(args[0]);
         		SpoutPlayer splayer = (SpoutPlayer) player;
         		splayer.setSkin(invis);
         		splayer.setCape(invis);
         		splayer.hideTitle();
         	}
         	else{
-        		Player player = (Player) sender;
+        		player = (Player) sender;
         		SpoutPlayer splayer = (SpoutPlayer) player;
         		splayer.setSkin(invis);
         		splayer.setCape(invis);
@@ -669,10 +679,22 @@ public class ForTheFilms extends JavaPlugin implements Listener
             	return true;
         	}
         	if (commandName.equals("setchar")){
-        		Player player = (Player) sender;
-        		SpoutPlayer splayer = (SpoutPlayer) player;
-        		if(characters.getString("Characters." + args[0] + ".Name")!=null)
-        			splayer.setTitle(characters.getString("Characters." + args[0] + ".Name"));
+        		Player player;
+            	if(args.length>1){
+            		player = Bukkit.getServer().getPlayer(args[0]);
+            	}
+            	else{
+            		player = (Player) sender;
+            	}
+        		SpoutPlayer splayer = (SpoutPlayer)player;
+        		if(characters.getString("Characters." + args[0] + ".Name")!=null){
+        			if(characters.getString("Characters." + args[0] + ".Name").equals("none"))
+        			{
+        				splayer.hideTitle();
+        			}else{
+        				splayer.setTitle(characters.getString("Characters." + args[0] + ".Name"));
+        			}
+        		}
         		if(characters.getString("Characters." + args[0] + ".Skin")!=null)
         			splayer.setSkin(characters.getString("Characters." + args[0] + ".Skin"));
         		if(characters.getString("Characters." + args[0] + ".Cape")!=null)
@@ -683,17 +705,44 @@ public class ForTheFilms extends JavaPlugin implements Listener
         	}
         	if (commandName.equals("setcharname"))
         	{
+        		reloadCharacters();
         		characters.set("Characters." + args[0] + ".Name", args[1]);
+        		saveCharacters();
         		return true;
         	}
         	if (commandName.equals("setcharskin"))
         	{
+        		reloadCharacters();
         		characters.set("Characters." + args[0] + ".Skin", args[1]);
+        		saveCharacters();
         		return true;
         	}
         	if (commandName.equals("setcharcape"))
         	{
+        		reloadCharacters();
         		characters.set("Characters." + args[0] + ".Cape", args[1]);
+        		saveCharacters();
+        		return true;
+        	}
+        	if (commandName.equals("delcharname"))
+        	{
+        		reloadCharacters();
+        		characters.set("Characters." + args[0] + ".Name", null);
+        		saveCharacters();
+        		return true;
+        	}
+        	if (commandName.equals("delcharskin"))
+        	{
+        		reloadCharacters();
+        		characters.set("Characters." + args[0] + ".Skin", null);
+        		saveCharacters();
+        		return true;
+        	}
+        	if (commandName.equals("delcharcape"))
+        	{
+        		reloadCharacters();
+        		characters.set("Characters." + args[0] + ".Cape", null);
+        		saveCharacters();
         		return true;
         	}
         }

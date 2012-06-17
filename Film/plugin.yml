@@ -1,5 +1,5 @@
 name: 4TheFilms
-version:  Beta v0.2.5
+version:  Beta v0.3
 author: TheTrooble
 description: Film plugin!
 main: me.thetrooble.forTheFilms.ForTheFilms
@@ -81,7 +81,11 @@ commands:
       description: teleport you to another player explosively
       usage: /<command> [player] [player]
    swap:
+      description: swaps the locations of two players
+      usage: /<command> [player] [player]
    boomswap:
+      description: swaps the locations of two players explosively
+      usage: /<command> [player] [player]
    swapboom:
    tele:
    teleport:
@@ -98,3 +102,7 @@ commands:
    setcharname:
    setcharskin:
    setcharcape:
+   delcharname:
+   delcharskin:
+   delcharcape:
+   switch:
