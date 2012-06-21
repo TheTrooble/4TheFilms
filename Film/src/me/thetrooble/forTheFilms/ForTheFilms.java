@@ -11,10 +11,6 @@ import me.thetrooble.forTheFilms.blocks.mBlockParent;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.World;
-import org.bukkit.block.Block;
-import org.bukkit.block.Sign;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -57,15 +53,10 @@ public class ForTheFilms extends JavaPlugin implements Listener
     private File charactersFile = null;
     public HashMap<String, Integer> entityID;
     public boolean useSpout;
-    public Player camera = null;
-    public Sign sign;
-    public String proj = "Movie";
-    public Location marker;
-    public Material preScene;
-    public byte preSceneData;
     public Location loc1;
     public Location loc2;
-    
+    private videoListener video;
+    private teleportExecutor teleport;
     public void onEnable()
     {        
         log = Logger.getLogger("Minecraft"); 
@@ -74,11 +65,37 @@ public class ForTheFilms extends JavaPlugin implements Listener
         pluginManager.registerEvents(this,this);
         useSpout = false;
         Plugin spout = pluginManager.getPlugin("Spout"); 	
-               
+        video = new videoListener(this);
+        teleport = new teleportExecutor();
+        doConfig();
+        setCommandExecutors();
         
         
-        
-        getConfig().addDefault("General.Blocks.Flaming.Planks",false);
+    	
+    	
+    	if( spout != null ){
+            if( !spout.isEnabled() ){
+                pluginManager.enablePlugin(spout);}
+                if(spout.isEnabled()){
+                	log.info("Spout detected, enabling Spout features");
+                    useSpout = true;
+                    setupTextures();
+                    setupBlocks();
+                }
+            }
+        else 
+        {
+        	log.info("Spout not detected,  Spout features");
+        }
+    }
+ 
+    public void onDisable()
+    {
+        log.info("4TheFilms disabled.");
+        useSpout = false;
+    }
+    public void doConfig(){
+    	getConfig().addDefault("General.Blocks.Flaming.Planks",false);
     	getConfig().addDefault("General.Blocks.Flaming.Log",false);
     	getConfig().addDefault("General.Blocks.Flaming.Orange",false);
     	getConfig().addDefault("General.Blocks.Flaming.Black",false);
@@ -112,30 +129,26 @@ public class ForTheFilms extends JavaPlugin implements Listener
     	characters.addDefault("Characters.Batman.Skin", "http://www.minecraftskins.info/batman.png");
     	characters.options().copyDefaults(true);
     	saveCharacters();
-    	
-    	
-    	if( spout != null ){
-            if( !spout.isEnabled() ){
-                pluginManager.enablePlugin(spout);}
-                if(spout.isEnabled()){
-                	log.info("Spout detected, enabling Spout features");
-                    useSpout = true;
-                    setupTextures();
-                    setupBlocks();
-                }
-            }
-        else 
-        {
-        	log.info("Spout not detected,  Spout features");
-        }
     }
- 
-    public void onDisable()
-    {
-        log.info("4TheFilms disabled.");
-        useSpout = false;
+    public void setCommandExecutors(){
+    	getCommand("action").setExecutor(video);
+    	getCommand("mark").setExecutor(video);
+    	getCommand("setcam").setExecutor(video);
+    	getCommand("setproject").setExecutor(video);
+    	getCommand("scene").setExecutor(video);
+    	
+    	getCommand("tp").setExecutor(teleport);
+    	getCommand("teleport").setExecutor(teleport);
+    	getCommand("tphere").setExecutor(teleport);
+    	getCommand("tpme").setExecutor(teleport);
+    	getCommand("tph").setExecutor(teleport);
+    	getCommand("swap").setExecutor(teleport);
+    	getCommand("boomswap").setExecutor(teleport);
+    	getCommand("swapboom").setExecutor(teleport);
+    	getCommand("tpboom").setExecutor(teleport);
+    	getCommand("boomtp").setExecutor(teleport);
+    	getCommand("teleboom").setExecutor(teleport);
     }
-    
     public void reloadBlockSettings() {
     	if (blockSettingsFile == null){
     		blockSettingsFile = new File(getDataFolder(), "blockSettings.yml");
@@ -248,158 +261,9 @@ public class ForTheFilms extends JavaPlugin implements Listener
         
         //Marker Sign
         
-        if (commandName.equals("setcam")){
-        	if(camera!=null){
-        		camera.sendMessage(args[0] + "has replaced you as the camera");
-        	}
-        camera=Bukkit.getServer().getPlayer(args[0]);
-        camera.sendMessage("You are the new camera");
-        return true;
-        }
-        if (commandName.equals("setproject")){
-        proj=args[0];
-        getServer().broadcastMessage("Project set to " + args[0]);
-        return true;
-        }
-        if (commandName.equals("scene")) {
-            Location loc = camera.getLocation();
-            World w = loc.getWorld();
-            float direction = loc.getYaw();
-            direction=(direction*-1);
-            marker = new Location(w,loc.getX(),loc.getY() + 1,loc.getZ()+1);
-            byte facing=0x0;
-            if(direction>315||direction<45){
-            marker = new Location(w,loc.getX(),loc.getY() + 1,loc.getZ()+1);
-            facing=0x8;
-            }
-            if(direction>75&&direction<135)
-            {
-            marker = new Location(w,loc.getX()+1,loc.getY() + 1,loc.getZ());
-            facing=0x4;
-            }
-            if(direction>135&&direction<225)
-            {
-            marker = new Location(w,loc.getX(),loc.getY() + 1,loc.getZ()-1);
-            facing=0x0;
-            }
-            if(direction>225&&direction<315)
-            {
-            marker = new Location(w,loc.getX()-1,loc.getY() + 1,loc.getZ());
-            facing=0xC;
-            }
-
-			Block b = w.getBlockAt(marker);
-			preScene = b.getType();
-			preSceneData=b.getData();
-            b.setTypeId(63);
-            b = w.getBlockAt(marker);
-            sign = (Sign)b.getState();
-            sign.setLine(0,proj);
-            
-            if (args.length>0){
-            sign.setLine(1, "Scene " + args[0]);
-            }
-            if(args.length>1){
-            sign.setLine(2, "Take " + args[1]);
-            }
-            if (args.length>2){
-            sign.setLine(3,args[2]);
-            }
-            sign.setRawData(facing);
-            sign.update();
-            return true;
-        }
-        if (commandName.equals("mark")||commandName.equals("action")){
-            Block b = camera.getWorld().getBlockAt(marker);
-            b.setType(preScene);
-            b.setData(preSceneData);
-            return true;
-            }
+       
         // }}
-        if (commandName.equals("tp")||commandName.equals("tele")||commandName.equals("teleport")){
-        	Player player1;
-        	Player player2;
-        	if(args.length>1){
-        		player1 = Bukkit.getServer().getPlayer(args[0]);
-        		player2 = Bukkit.getServer().getPlayer(args[1]);
-        	}
-        	else{
-        		player1 = (Player)sender;
-        		player2 = Bukkit.getServer().getPlayer(args[0]);
-        	}
-        	Location loc = player2.getLocation();
-        	player1.teleport(loc);
-        	return true;
-        }
-        if (commandName.equals("tphere")||commandName.equals("telehere")||commandName.equals("teleporthere")||commandName.equals("tpme")||commandName.equals("tph")){
-        	Player player1;
-        	Player player2;
-        	if(args.length>1){
-        		player1 = Bukkit.getServer().getPlayer(args[0]);
-        		player2 = Bukkit.getServer().getPlayer(args[1]);
-        	}
-        	else{
-        		player1 = (Player)sender;
-        		player2 = Bukkit.getServer().getPlayer(args[0]);
-        	}
-        	Location loc = player1.getLocation();
-        	player2.teleport(loc);
-        	return true;
-        }
-        if (commandName.equals("swap")){
-        	Player player1;
-        	Player player2;
-        	if(args.length>1){
-        		player1 = Bukkit.getServer().getPlayer(args[0]);
-        		player2 = Bukkit.getServer().getPlayer(args[1]);
-        	}
-        	else{
-        		player1 = (Player)sender;
-        		player2 = Bukkit.getServer().getPlayer(args[0]);
-        	}
-        	Location loc1 = player1.getLocation();
-        	Location loc2 = player2.getLocation();
-        	player1.teleport(loc2);
-        	player2.teleport(loc1);
-        	return true;
-        }
-        if (commandName.equals("swapboom")||commandName.equals("boomswap")){
-        	Player player1;
-        	Player player2;
-        	if(args.length>1){
-        		player1 = Bukkit.getServer().getPlayer(args[0]);
-        		player2 = Bukkit.getServer().getPlayer(args[1]);
-        	}
-        	else{
-        		player1 = (Player)sender;
-        		player2 = Bukkit.getServer().getPlayer(args[0]);
-        	}
-        	Location loc1 = player1.getLocation();
-        	Location loc2 = player2.getLocation();
-        	player1.getWorld().createExplosion(loc1,0);
-        	player2.getWorld().createExplosion(loc2,0);
-        	player1.teleport(loc2);
-        	player2.teleport(loc1);
-        	return true;
-        }
-        if (commandName.equals("tpboom")||commandName.equals("boomtp")||commandName.equals("teleboom")){
-        	Player player1;
-        	Player player2;
-        	if(args.length>1){
-        		player1 = Bukkit.getServer().getPlayer(args[0]);
-        		player2 = Bukkit.getServer().getPlayer(args[1]);
-        	}
-        	else{
-        		player1 = (Player)sender;
-        		player2 = Bukkit.getServer().getPlayer(args[0]);
-        	}
-        	Location loc1 = player1.getLocation();
-        	Location loc2 = player2.getLocation();
-        	player1.getWorld().createExplosion(loc1,0);
-        	player2.getWorld().createExplosion(loc2,0);
-        	player1.teleport(loc2);
-        	return true;
-        }
+        
         //Fling, VERY expirimental
         if (commandName.equals("fling")){
         	Player player;

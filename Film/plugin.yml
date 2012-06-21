@@ -87,15 +87,12 @@ commands:
       description: swaps the locations of two players explosively
       usage: /<command> [player] [player]
    swapboom:
-   tele:
    teleport:
    boomtp:
    teleboom:
    action:
    fling:
    tphere:
-   telehere:
-   teleporthere:
    tpme:
    tph:
    setchar:
