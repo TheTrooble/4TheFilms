@@ -56,8 +56,8 @@ public class ForTheFilms extends JavaPlugin implements Listener
     public boolean useSpout;
     public Location loc1;
     public Location loc2;
-    private videoListener video;
-    private teleportExecutor teleport;
+    private VideoExecutor video;
+    private TeleportExecutor teleport;
     public void onEnable()
     {        
         log = Logger.getLogger("Minecraft"); 
@@ -66,8 +66,8 @@ public class ForTheFilms extends JavaPlugin implements Listener
         pluginManager.registerEvents(this,this);
         useSpout = false;
         Plugin spout = pluginManager.getPlugin("Spout"); 	
-        video = new videoListener(this);
-        teleport = new teleportExecutor();
+        video = new VideoExecutor(this);
+        teleport = new TeleportExecutor();
         doConfig();
         setCommandExecutors();
         
