@@ -3,7 +3,6 @@ package me.thetrooble.forTheFilms;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URI;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import me.thetrooble.forTheFilms.blocks.FlamingParent;
@@ -48,16 +47,17 @@ public class ForTheFilms extends JavaPlugin implements Listener
     public static Texture multiTexture;
 
 	public static String invis = "http://dl.dropbox.com/s/fktmeor9m9rd19w/invisiskin.png";
-    private FileConfiguration blockSettings = null;
-    private File blockSettingsFile = null;
-    private FileConfiguration characters = null;
-    private File charactersFile = null;
+    FileConfiguration blockSettings = null;
+    File blockSettingsFile = null;
+    FileConfiguration characters = null;
+    File charactersFile = null;
     public HashMap<String, Integer> entityID;
     public boolean useSpout;
     public Location loc1;
     public Location loc2;
     private VideoExecutor video;
     private TeleportExecutor teleport;
+    private PlayerExecutor playerex;
     public void onEnable()
     {        
         log = Logger.getLogger("Minecraft"); 
@@ -67,6 +67,7 @@ public class ForTheFilms extends JavaPlugin implements Listener
         useSpout = false;
         Plugin spout = pluginManager.getPlugin("Spout"); 	
         video = new VideoExecutor(this);
+        playerex = new PlayerExecutor(this);
         teleport = new TeleportExecutor();
         doConfig();
         setCommandExecutors();
@@ -149,6 +150,27 @@ public class ForTheFilms extends JavaPlugin implements Listener
     	getCommand("tpboom").setExecutor(teleport);
     	getCommand("boomtp").setExecutor(teleport);
     	getCommand("teleboom").setExecutor(teleport);
+    	
+    	getCommand("setskin").setExecutor(playerex);
+    	getCommand("resetskin").setExecutor(playerex);
+    	getCommand("stealskin").setExecutor(playerex);
+    	getCommand("setcape").setExecutor(playerex);
+    	getCommand("resetcape").setExecutor(playerex);
+    	getCommand("invisible").setExecutor(playerex);
+    	getCommand("resetplayer").setExecutor(playerex);
+    	getCommand("setname").setExecutor(playerex);
+    	getCommand("resetname").setExecutor(playerex);
+    	getCommand("hidename").setExecutor(playerex);
+    	getCommand("setchar").setExecutor(playerex);
+    	getCommand("setcharname").setExecutor(playerex);
+    	getCommand("setcharskin").setExecutor(playerex);
+    	getCommand("setcharcape").setExecutor(playerex);
+    	getCommand("delcharname").setExecutor(playerex);
+    	getCommand("delcharskin").setExecutor(playerex);
+    	getCommand("delcharcape").setExecutor(playerex);
+    	getCommand("steve").setExecutor(playerex);
+    	getCommand("hidecape").setExecutor(playerex);
+    	
     }
     public void reloadBlockSettings() {
     	if (blockSettingsFile == null){
@@ -251,7 +273,6 @@ public class ForTheFilms extends JavaPlugin implements Listener
 		//Commands
 	
 		//Commands Override
-    @SuppressWarnings({ "rawtypes", "unchecked" })
 	@Override public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         String commandName = command.getName().toLowerCase(); 
  
@@ -358,6 +379,17 @@ public class ForTheFilms extends JavaPlugin implements Listener
         	player.getWorld().createExplosion(player.getLocation(),0);
             return true;
         }
+    
+        //Reload EITHER DEPRICATE OR IMPROVE
+        
+        if (commandName.equals("filmreload")){
+        	reloadConfig();
+        	if(useSpout){
+        		setupBlocks();//Any blocks without a check for null will double generate
+        		setupTextures();//whereas any blocks WITH a check for null will not change 
+        	}
+        	return true;
+        }
         if (commandName.equals("vanish")){
         	Player player;
         	if(args.length<1){
@@ -388,294 +420,8 @@ public class ForTheFilms extends JavaPlugin implements Listener
         	player.getWorld().createExplosion(player.getLocation(),0);
             return true;
         }
-    
-        //Reload EITHER DEPRICATE OR IMPROVE
-        
-        if (commandName.equals("filmreload")){
-        	reloadConfig();
-        	if(useSpout){
-        		setupBlocks();//Any blocks without a check for null will double generate
-        		setupTextures();//whereas any blocks WITH a check for null will not change 
-        	}
-        	return true;
-        }
-        if (commandName.equals("easteregg")){
-        	 try
-             {
-                 URI uri = new URI("http://www.youtube.com/user/4TheLOLZ9001");
-                 Class class1 = Class.forName("java.awt.Desktop");
-                 Object obj = class1.getMethod("getDesktop", new Class[0]).invoke(null, new Object[0]);
-                 class1.getMethod("browse", new Class[]
-                         {
-                             java.net.URI.class
-                         }).invoke(obj, new Object[]
-                                 {
-                                     uri
-                                 });
-             }
-             catch (Throwable throwable)
-             {
-                 throwable.printStackTrace();
-             }
-        }
         
         //Spout Commands
-        
-        if (useSpout){   
-        	
-        //Skin Commands
-        	
-        	if (commandName.equals("setskin")){
-        		String skin;
-        		SpoutPlayer splayer;
-            	if(args.length>1){
-            		Player player = Bukkit.getServer().getPlayer(args[0]);
-            		splayer = (SpoutPlayer) player;
-            		skin =args[1];
-            	}
-            	else{
-            		Player player = (Player) sender;
-            		splayer = (SpoutPlayer) player;
-            		skin = args[0];
-            	}
-            	try{
-            		splayer.setSkin(skin);}
-            	catch(UnsupportedOperationException e){     	
-            		log.info(splayer.getName()+"entered an invalid URL, all skin URL's MUST end in .png");
-            	}
-            	return true;
-        	}     	
-        	if (commandName.equals("resetskin")){
-            	if(args.length>0){
-            		Player player = Bukkit.getServer().getPlayer(args[0]);
-            		SpoutPlayer splayer = (SpoutPlayer) player;
-            		splayer.resetSkin();
-            	}
-            	else{
-            		Player player = (Player) sender;
-            		SpoutPlayer splayer = (SpoutPlayer) player;
-            		splayer.resetSkin();
-            	}
-            	return true;
-        	}
-        	if (commandName.equals("stealskin")){
-        		if(args.length>1){
-            		Player player = Bukkit.getServer().getPlayer(args[0]);
-            		SpoutPlayer splayer = (SpoutPlayer) player;
-            		splayer.setSkin("http://s3.amazonaws.com/MinecraftSkins/"+args[1]+".png");
-            	}
-            	else{
-            		Player player = (Player) sender;
-            		SpoutPlayer splayer = (SpoutPlayer) player;
-            		splayer.setSkin("http://s3.amazonaws.com/MinecraftSkins/"+args[0]+".png");
-            	}
-            	return true;
-        	}
-
-        	//Cape Commands
-        	
-        	if (commandName.equals("setcape")){
-        		String cape;
-        		SpoutPlayer splayer;
-            	if(args.length>1){
-            		Player player = Bukkit.getServer().getPlayer(args[0]);
-            		splayer = (SpoutPlayer) player;
-            		cape = args[1];
-            	}
-            	else{
-            		Player player = (Player) sender;
-            		splayer = (SpoutPlayer) player;
-            		cape = args[0];
-            	}try{
-            		splayer.setCape(cape);}
-            	catch(UnsupportedOperationException e){     	
-            		log.info(splayer.getName()+"entered an invalid URL, all skin URL's MUST end in .png");
-            	}
-            	return true;
-        	}
-        	if (commandName.equals("resetcape")){
-            	if(args.length>0){
-            		Player player = Bukkit.getServer().getPlayer(args[0]);
-            		SpoutPlayer splayer = (SpoutPlayer) player;
-            		splayer.resetCape();
-            	}
-            	else{
-            		Player player = (Player) sender;
-            		SpoutPlayer splayer = (SpoutPlayer) player;
-            		splayer.resetCape();
-            	}
-            	return true;
-        	}
-
-        	if (commandName.equals("invisible")){
-        		Player player;
-        		if(args.length>0){
-        		player = Bukkit.getServer().getPlayer(args[0]);
-        		SpoutPlayer splayer = (SpoutPlayer) player;
-        		splayer.setSkin(invis);
-        		splayer.setCape(invis);
-        		splayer.hideTitle();
-        	}
-        	else{
-        		player = (Player) sender;
-        		SpoutPlayer splayer = (SpoutPlayer) player;
-        		splayer.setSkin(invis);
-        		splayer.setCape(invis);
-        		splayer.hideTitle();
-        	}
-        		return true;
-        	}
-        	if (commandName.equals("resetplayer")){
-        		if(args.length>0){
-        		Player player = Bukkit.getServer().getPlayer(args[0]);
-        		SpoutPlayer splayer = (SpoutPlayer) player;
-        		splayer.resetSkin();
-        		splayer.resetCape();
-        		splayer.resetTitle();
-        	}
-        	else{
-        		Player player = (Player) sender;
-        		SpoutPlayer splayer = (SpoutPlayer) player;
-        		splayer.resetSkin();
-        		splayer.resetCape();
-        		splayer.resetTitle();
-        	}
-        		return true;
-        	}
-        // {{ Name Commands
-
-        	
-        	if (commandName.equals("setname")){
-            	if(args.length>1){
-            		Player player = Bukkit.getServer().getPlayer(args[0]);
-            		SpoutPlayer splayer = (SpoutPlayer) player;
-            		splayer.setTitle(args[1]);
-            	}
-            	else{
-            		Player player = (Player) sender;
-            		SpoutPlayer splayer = (SpoutPlayer) player;
-            		splayer.setTitle(args[0]);
-            	}
-            	return true;
-        	}
-        	if (commandName.equals("resetname")){
-            	if(args.length>0){
-            		Player player = Bukkit.getServer().getPlayer(args[0]);
-            		SpoutPlayer splayer = (SpoutPlayer) player;
-            		splayer.resetTitle();
-            	}
-            	else{
-            		Player player = (Player) sender;
-            		SpoutPlayer splayer = (SpoutPlayer) player;
-            		splayer.resetTitle();
-            	}
-            	return true;
-        	}
-        	if (commandName.equals("hidename")){
-            	if(args.length>0){
-            		Player player = Bukkit.getServer().getPlayer(args[0]);
-            		SpoutPlayer splayer = (SpoutPlayer) player;
-            		splayer.hideTitle();
-            	}
-            	else{
-            		Player player = (Player) sender;
-            		SpoutPlayer splayer = (SpoutPlayer) player;
-            		splayer.hideTitle();
-            	}
-            	return true;
-        	}
-        	if (commandName.equals("setchar")){
-        		Player player;
-            	if(args.length>1){
-            		player = Bukkit.getServer().getPlayer(args[0]);
-            	}
-            	else{
-            		player = (Player) sender;
-            	}
-        		SpoutPlayer splayer = (SpoutPlayer)player;
-        		if(characters.getString("Characters." + args[0] + ".Name")!=null){
-        			if(characters.getString("Characters." + args[0] + ".Name").equals("none"))
-        			{
-        				splayer.hideTitle();
-        			}else{
-        				splayer.setTitle(characters.getString("Characters." + args[0] + ".Name"));
-        			}
-        		}
-        		if(characters.getString("Characters." + args[0] + ".Skin")!=null)
-        			splayer.setSkin(characters.getString("Characters." + args[0] + ".Skin"));
-        		if(characters.getString("Characters." + args[0] + ".Cape")!=null)
-        			splayer.setCape(characters.getString("Characters." + args[0] + ".Cape"));
-        		else
-        			splayer.setCape(invis);
-        		return true;
-        	}
-        	if (commandName.equals("setcharname"))
-        	{
-        		reloadCharacters();
-        		characters.set("Characters." + args[0] + ".Name", args[1]);
-        		saveCharacters();
-        		return true;
-        	}
-        	if (commandName.equals("setcharskin"))
-        	{
-        		reloadCharacters();
-        		characters.set("Characters." + args[0] + ".Skin", args[1]);
-        		saveCharacters();
-        		return true;
-        	}
-        	if (commandName.equals("setcharcape"))
-        	{
-        		reloadCharacters();
-        		characters.set("Characters." + args[0] + ".Cape", args[1]);
-        		saveCharacters();
-        		return true;
-        	}
-        	if (commandName.equals("delcharname"))
-        	{
-        		reloadCharacters();
-        		characters.set("Characters." + args[0] + ".Name", null);
-        		saveCharacters();
-        		return true;
-        	}
-        	if (commandName.equals("delcharskin"))
-        	{
-        		reloadCharacters();
-        		characters.set("Characters." + args[0] + ".Skin", null);
-        		saveCharacters();
-        		return true;
-        	}
-        	if (commandName.equals("delcharcape"))
-        	{
-        		reloadCharacters();
-        		characters.set("Characters." + args[0] + ".Cape", null);
-        		saveCharacters();
-        		return true;
-        	}
-        	if (commandName.equals("steve")){
-        		Player player;
-            	if(args.length>1){
-            		player = Bukkit.getServer().getPlayer(args[0]);
-            	}
-            	else{
-            		player = (Player) sender;
-            	}
-        		SpoutPlayer splayer = (SpoutPlayer)player;
-        		splayer.setCape(invis);
-        		splayer.setTitle("Steve");
-        		splayer.setSkin("http://www.minecraft.net/images/char.png");
-        	}
-        	if (commandName.equals("hidecape")){
-        		Player player;
-            	if(args.length>1){
-            		player = Bukkit.getServer().getPlayer(args[0]);
-            	}
-            	else{
-            		player = (Player) sender;
-            	}
-        		SpoutPlayer splayer = (SpoutPlayer)player;
-        		splayer.setCape(invis);
-        	}        			
-        }
     return false;
     }
     Logger log;     
