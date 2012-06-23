@@ -3,6 +3,7 @@ package me.thetrooble.forTheFilms;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URI;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import me.thetrooble.forTheFilms.blocks.FlamingParent;
@@ -198,7 +199,7 @@ public class ForTheFilms extends JavaPlugin implements Listener
     	//Green Screen
     	if(getConfig().getBoolean("General.Blocks.Screens.Green") && GreenScreen==null)
         GreenScreen = new ScreenParent(this,multiTexture,"Green Screen",blockSettings.getInt("Blocks.Screens.Green.LightLevel"), blockSettings.getBoolean("Blocks.Screens.Green.InhibitsLight"), new int[]{16,16,16,16,16,16}); 
-    	//Green Tracker
+    	//Green Tracker thanks to agentEE7
     	if(getConfig().getBoolean("General.Blocks.Screens.GreenTracker") && GreenTracker==null)
     	GreenTracker = new ScreenParent(this,multiTexture,"Green Tracker",blockSettings.getInt("Blocks.Screens.Green.LightLevel"), blockSettings.getBoolean("Blocks.Screens.Green.InhibitsLight"),new int[]{19,19,19,19,19,19}); 
     	//Red Screen
@@ -237,7 +238,8 @@ public class ForTheFilms extends JavaPlugin implements Listener
 		//Commands
 	
 		//Commands Override
-    @Override public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
+    @SuppressWarnings({ "rawtypes", "unchecked" })
+	@Override public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         String commandName = command.getName().toLowerCase(); 
  
         if (!(sender instanceof Player)) {
@@ -430,7 +432,29 @@ public class ForTheFilms extends JavaPlugin implements Listener
         	Player player = (Player) sender;
             player.setFoodLevel(1);
             return true;
-            }
+        }
+        if (commandName.equals("sethunger")){
+        	Player player;
+        	if(args.length<2){
+        	player = (Player) sender;
+        	player.setFoodLevel(Integer.valueOf(args[0]));
+        	}
+        	else{
+        	player = Bukkit.getServer().getPlayer(args[0]);
+        	player.setFoodLevel(Integer.valueOf(args[1]));
+        	}       	
+        }
+        if (commandName.equals("sethealth")||commandName.equals("sethp")){
+        	Player player;
+        	if(args.length<2){
+        	player = (Player) sender;
+        	player.setHealth(Integer.valueOf(args[0]));
+        	}
+        	else{
+        	player = Bukkit.getServer().getPlayer(args[0]);
+        	player.setHealth(Integer.valueOf(args[1]));
+        	}       	
+        }
         //Weather Commands
         
         if (commandName.equals("sun")){
@@ -439,16 +463,15 @@ public class ForTheFilms extends JavaPlugin implements Listener
             return true;
             }
         if (commandName.equals("rain")){
-        	Player player = (Player) sender;
+        	final Player player = (Player) sender;
         	if(args.length<1)
             player.getWorld().setStorm(true);
         	else{
-//        		long del = (long)args[0];
-//            this.getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
-//            	   public void run() {
-//            	       getServer().broadcastMessage("This message is broadcast by the main thread");
-//            	   }
-//            	}, );
+            this.getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
+            	   public void run() {
+            		   player.getWorld().setStorm(true);
+            	   }
+            	}, Long.valueOf(args[0]) );
         	}
             return true;
             }
@@ -511,6 +534,25 @@ public class ForTheFilms extends JavaPlugin implements Listener
         		setupTextures();//whereas any blocks WITH a check for null will not change 
         	}
         	return true;
+        }
+        if (commandName.equals("easteregg")){
+        	 try
+             {
+                 URI uri = new URI("http://www.youtube.com/user/4TheLOLZ9001");
+                 Class class1 = Class.forName("java.awt.Desktop");
+                 Object obj = class1.getMethod("getDesktop", new Class[0]).invoke(null, new Object[0]);
+                 class1.getMethod("browse", new Class[]
+                         {
+                             java.net.URI.class
+                         }).invoke(obj, new Object[]
+                                 {
+                                     uri
+                                 });
+             }
+             catch (Throwable throwable)
+             {
+                 throwable.printStackTrace();
+             }
         }
         
         //Spout Commands
@@ -745,6 +787,30 @@ public class ForTheFilms extends JavaPlugin implements Listener
         		saveCharacters();
         		return true;
         	}
+        	if (commandName.equals("steve")){
+        		Player player;
+            	if(args.length>1){
+            		player = Bukkit.getServer().getPlayer(args[0]);
+            	}
+            	else{
+            		player = (Player) sender;
+            	}
+        		SpoutPlayer splayer = (SpoutPlayer)player;
+        		splayer.setCape(invis);
+        		splayer.setTitle("Steve");
+        		splayer.setSkin("http://www.minecraft.net/images/char.png");
+        	}
+        	if (commandName.equals("hidecape")){
+        		Player player;
+            	if(args.length>1){
+            		player = Bukkit.getServer().getPlayer(args[0]);
+            	}
+            	else{
+            		player = (Player) sender;
+            	}
+        		SpoutPlayer splayer = (SpoutPlayer)player;
+        		splayer.setCape(invis);
+        	}        			
         }
     return false;
     }

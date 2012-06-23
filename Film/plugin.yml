@@ -105,4 +105,7 @@ commands:
    delcharname:
    delcharskin:
    delcharcape:
-   switch:
+   steve:
+   hidecape:
+   sunnyday:
+   easteregg:
