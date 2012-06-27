@@ -1,5 +1,5 @@
 name: 4TheFilms
-version:  Beta v0.3
+version:  Beta v0.3.1
 author: TheTrooble
 description: Film plugin!
 main: me.thetrooble.forTheFilms.ForTheFilms
@@ -87,10 +87,20 @@ commands:
       description: swaps the locations of two players explosively
       usage: /<command> [player] [player]
    swapboom:
+      description: swaps the locations of two players explosively
+      usage: /<command> [player] [player]
    teleport:
+      description: teleport yourself to another player
+      usage: /<command> [player] [player]
    boomtp:
+      description: teleport you to another player explosively
+      usage: /<command> [player] [player]      
    teleboom:
+      description: teleport you to another player explosively
+      usage: /<command> [player] [player]
    action:
+      description: Removes sign and replaces block that the sign removes
+      usage: /<command>
    fling:
    tphere:
    tpme:
@@ -105,4 +115,5 @@ commands:
    steve:
    hidecape:
    sunnyday:
-
+   mode:
+   worker:

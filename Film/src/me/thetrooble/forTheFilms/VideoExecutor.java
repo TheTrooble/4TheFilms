@@ -16,12 +16,15 @@ public class VideoExecutor implements CommandExecutor {
 		this.plugin=plugin;
 	}
 	private ForTheFilms plugin;
-	public Player camera = null;
+	public static Player camera = null;
 	public Sign sign;
 	public String proj = "Movie";
 	public Location marker;
 	public Material preScene;
 	public byte preSceneData;
+	public static Player getCam(){
+		return camera;
+	}
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         String commandName = command.getName().toLowerCase(); 
  
@@ -29,10 +32,6 @@ public class VideoExecutor implements CommandExecutor {
             sender.sendMessage("/" + commandName + " can only be run from in game.");
             return true;
         }
-        
-        
-        //Marker Sign
-        
         if (commandName.equals("setcam")){
         	if(camera!=null){
         		camera.sendMessage(args[0] + "has replaced you as the camera");
@@ -99,7 +98,7 @@ public class VideoExecutor implements CommandExecutor {
             b.setType(preScene);
             b.setData(preSceneData);
             return true;
-            }
+        }
     	return false;
-}
+	}
 }

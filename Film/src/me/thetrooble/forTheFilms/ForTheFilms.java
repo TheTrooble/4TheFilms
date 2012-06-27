@@ -10,6 +10,7 @@ import me.thetrooble.forTheFilms.blocks.ScreenParent;
 import me.thetrooble.forTheFilms.blocks.mBlockParent;
 
 import org.bukkit.Bukkit;
+import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -23,7 +24,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.util.Vector;
 import org.getspout.spoutapi.block.design.Texture;
 import org.getspout.spoutapi.material.CustomBlock;
-import org.getspout.spoutapi.player.SpoutPlayer;
 import java.util.HashMap;
 public class ForTheFilms extends JavaPlugin implements Listener
 {
@@ -71,8 +71,7 @@ public class ForTheFilms extends JavaPlugin implements Listener
         teleport = new TeleportExecutor();
         doConfig();
         setCommandExecutors();
-        
-        
+       
     	
     	
     	if( spout != null ){
@@ -280,23 +279,26 @@ public class ForTheFilms extends JavaPlugin implements Listener
             sender.sendMessage("/" + commandName + " can only be run from in game.");
             return true;
         }
-        
-        
-        //Marker Sign
-        
-       
-        // }}
-        
+                
         //Fling, VERY expirimental
         if (commandName.equals("fling")){
         	Player player;
-        	Vector vec = new Vector(5,5,5);
+        	Vector vec;
+        	int mul;
         	if(args.length>1){
         		player = Bukkit.getServer().getPlayer(args[0]);
+        		mul = Integer.valueOf(args[1]);
+        	}
+        	else if(args.length>0){
+        		player = (Player)sender;
+        		mul = Integer.valueOf(args[0]);
         	}
         	else{
         		player = (Player)sender;
+        		mul=1;
         	}
+        	vec = player.getLocation().getDirection();
+        	vec.multiply(mul);
        		player.setVelocity(vec);
         }
         
@@ -398,10 +400,9 @@ public class ForTheFilms extends JavaPlugin implements Listener
         	else{
         	player = Bukkit.getServer().getPlayer(args[0]);
         	}
-        	SpoutPlayer splayer = (SpoutPlayer) player;
-        	splayer.setSkin(invis);
-    		splayer.setCape(invis);
-    		splayer.hideTitle();
+        	for(Player other : Bukkit.getServer().getOnlinePlayers()){
+        		other.hidePlayer(player);
+        	}
         	player.getWorld().createExplosion(player.getLocation(),0);
             return true;
         }
@@ -413,16 +414,62 @@ public class ForTheFilms extends JavaPlugin implements Listener
         	else{
         	player = Bukkit.getServer().getPlayer(args[0]);
         	}
-        	SpoutPlayer splayer = (SpoutPlayer) player;
-        	splayer.resetSkin();
-    		splayer.resetCape();
-    		splayer.hideTitle();
+        	for(Player other : Bukkit.getServer().getOnlinePlayers()){
+        		other.showPlayer(player);
+        	}
         	player.getWorld().createExplosion(player.getLocation(),0);
             return true;
         }
-        
-        //Spout Commands
+        if (commandName.equals("worker")){
+        	Player cam = VideoExecutor.getCam();
+        	Player player = null;
+        	if(args.length>0){
+        		player = Bukkit.getServer().getPlayer(args[0]);
+        	}
+        	else{
+        		player = (Player)sender;
+        	}
+        	cam.hidePlayer(player);
+        }
+        if (commandName.equals("mode")){
+        	Player player = null;
+        	GameMode modefrom;
+        	GameMode modeto = null;
+        	if(args.length==0){
+        	player = (Player) sender;
+        	modefrom = player.getGameMode();
+        	if(modefrom.equals(GameMode.SURVIVAL))
+        		modeto = GameMode.CREATIVE;
+        	else
+        		modeto = GameMode.SURVIVAL;
+        	}
+        	if(args.length==1){
+        		if(Bukkit.getServer().getPlayer(args[0])!=null){
+        			player = Bukkit.getServer().getPlayer(args[0]);
+        			modefrom = player.getGameMode();
+                	if(modefrom.equals(GameMode.SURVIVAL))
+                		modeto = GameMode.CREATIVE;
+                	else
+                		modeto = GameMode.SURVIVAL;
+        		}else{
+        			player = (Player)sender;
+        			if(args[0].toLowerCase().equals("survival")||args[1].equals("1"))
+        				modeto = GameMode.SURVIVAL;
+        			else
+        				modeto = GameMode.CREATIVE;
+        		}
+        		}
+        	if(args.length>1){
+        		player = Bukkit.getServer().getPlayer(args[0]);
+        		if(args[1].toLowerCase().equals("survival")||args[1].equals("1"))
+    				modeto = GameMode.SURVIVAL;
+        		else
+        			modeto = GameMode.CREATIVE;
+        	}
+        	player.setGameMode(modeto);
+        	return true;
+        }
     return false;
     }
-    Logger log;     
+    Logger log; 
 }

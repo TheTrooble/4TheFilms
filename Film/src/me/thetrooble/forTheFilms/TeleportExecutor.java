@@ -54,7 +54,7 @@ public class TeleportExecutor implements CommandExecutor {
      	player2.getWorld().createExplosion(loc2,0);
      	player1.teleport(loc2);
      	return true;
-     }
-     return false;
+    }
+    return false;
 	}
 }

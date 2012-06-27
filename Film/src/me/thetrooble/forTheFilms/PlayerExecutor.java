@@ -15,6 +15,10 @@ public class PlayerExecutor implements CommandExecutor {
 	}
 	private ForTheFilms plugin;
 	public static String invis = "http://dl.dropbox.com/s/fktmeor9m9rd19w/invisiskin.png";
+	
+	Player player;
+	SpoutPlayer splayer;
+	String URL;	
 	public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
         String commandName = command.getName().toLowerCase(); 
  
@@ -22,186 +26,93 @@ public class PlayerExecutor implements CommandExecutor {
             sender.sendMessage("/" + commandName + " can only be run from in game.");
             return true;
         }
-	if (commandName.equals("setskin")){
-		String skin;
-		SpoutPlayer splayer;
-    	if(args.length>1){
-    		Player player = Bukkit.getServer().getPlayer(args[0]);
+        
+        
+        if(args.length>1){
+        	if(Bukkit.getServer().getPlayer(args[0])!=null)
+    		player = Bukkit.getServer().getPlayer(args[0]);
+        	else
+        	player = (Player)sender;
     		splayer = (SpoutPlayer) player;
-    		skin =args[1];
+    		URL =args[1];
     	}
     	else{
     		Player player = (Player) sender;
     		splayer = (SpoutPlayer) player;
-    		skin = args[0];
-    	}
+    		URL = args[0];
+    	}        
+        
+        
+	if (commandName.equals("setskin")){	
     	try{
-    		splayer.setSkin(skin);}
+    		splayer.setSkin(URL);}
     	catch(UnsupportedOperationException e){     	
     		log.info(splayer.getName()+"entered an invalid URL, all skin URL's MUST end in .png");
     	}
     	return true;
 	}     	
 	if (commandName.equals("resetskin")){
-    	if(args.length>0){
-    		Player player = Bukkit.getServer().getPlayer(args[0]);
-    		SpoutPlayer splayer = (SpoutPlayer) player;
-    		splayer.resetSkin();
-    	}
-    	else{
-    		Player player = (Player) sender;
-    		SpoutPlayer splayer = (SpoutPlayer) player;
-    		splayer.resetSkin();
-    	}
+		splayer.resetSkin();
     	return true;
 	}
 	if (commandName.equals("stealskin")){
-		if(args.length>1){
-    		Player player = Bukkit.getServer().getPlayer(args[0]);
-    		SpoutPlayer splayer = (SpoutPlayer) player;
-    		splayer.setSkin("http://s3.amazonaws.com/MinecraftSkins/"+args[1]+".png");
-    	}
-    	else{
-    		Player player = (Player) sender;
-    		SpoutPlayer splayer = (SpoutPlayer) player;
-    		splayer.setSkin("http://s3.amazonaws.com/MinecraftSkins/"+args[0]+".png");
+		try{
+    	splayer.setSkin("http://s3.amazonaws.com/MinecraftSkins/"+URL+".png");
+    	}catch(UnsupportedOperationException e){     	
+    		log.info(splayer.getName()+"entered an invalid URL, please ensure the player name is valid");
     	}
     	return true;
 	}
-
-	//Cape Commands
-	
 	if (commandName.equals("setcape")){
-		String cape;
-		SpoutPlayer splayer;
-    	if(args.length>1){
-    		Player player = Bukkit.getServer().getPlayer(args[0]);
-    		splayer = (SpoutPlayer) player;
-    		cape = args[1];
-    	}
-    	else{
-    		Player player = (Player) sender;
-    		splayer = (SpoutPlayer) player;
-    		cape = args[0];
-    	}try{
-    		splayer.setCape(cape);}
-    	catch(UnsupportedOperationException e){     	
-    		log.info(splayer.getName()+"entered an invalid URL, all skin URL's MUST end in .png");
+		try{
+    		splayer.setCape(URL);
+    	}catch(UnsupportedOperationException e){     	
+    		log.info(splayer.getName()+"entered an invalid URL, all cape URL's MUST end in .png");
     	}
     	return true;
 	}
 	if (commandName.equals("resetcape")){
-    	if(args.length>0){
-    		Player player = Bukkit.getServer().getPlayer(args[0]);
-    		SpoutPlayer splayer = (SpoutPlayer) player;
-    		splayer.resetCape();
-    	}
-    	else{
-    		Player player = (Player) sender;
-    		SpoutPlayer splayer = (SpoutPlayer) player;
-    		splayer.resetCape();
-    	}
+		splayer.resetCape();
     	return true;
 	}
 
 	if (commandName.equals("invisible")){
-		Player player;
-		if(args.length>0){
-		player = Bukkit.getServer().getPlayer(args[0]);
-		SpoutPlayer splayer = (SpoutPlayer) player;
 		splayer.setSkin(invis);
 		splayer.setCape(invis);
 		splayer.hideTitle();
-	}
-	else{
-		player = (Player) sender;
-		SpoutPlayer splayer = (SpoutPlayer) player;
-		splayer.setSkin(invis);
-		splayer.setCape(invis);
-		splayer.hideTitle();
-	}
 		return true;
 	}
 	if (commandName.equals("resetplayer")){
-		if(args.length>0){
-		Player player = Bukkit.getServer().getPlayer(args[0]);
-		SpoutPlayer splayer = (SpoutPlayer) player;
 		splayer.resetSkin();
 		splayer.resetCape();
 		splayer.resetTitle();
-	}
-	else{
-		Player player = (Player) sender;
-		SpoutPlayer splayer = (SpoutPlayer) player;
-		splayer.resetSkin();
-		splayer.resetCape();
-		splayer.resetTitle();
-	}
 		return true;
 	}
-// {{ Name Commands
-
-	
 	if (commandName.equals("setname")){
-    	if(args.length>1){
-    		Player player = Bukkit.getServer().getPlayer(args[0]);
-    		SpoutPlayer splayer = (SpoutPlayer) player;
-    		splayer.setTitle(args[1]);
-    	}
-    	else{
-    		Player player = (Player) sender;
-    		SpoutPlayer splayer = (SpoutPlayer) player;
-    		splayer.setTitle(args[0]);
-    	}
+    	splayer.setTitle(URL);
     	return true;
 	}
 	if (commandName.equals("resetname")){
-    	if(args.length>0){
-    		Player player = Bukkit.getServer().getPlayer(args[0]);
-    		SpoutPlayer splayer = (SpoutPlayer) player;
-    		splayer.resetTitle();
-    	}
-    	else{
-    		Player player = (Player) sender;
-    		SpoutPlayer splayer = (SpoutPlayer) player;
-    		splayer.resetTitle();
-    	}
+    	splayer.resetTitle();
     	return true;
 	}
 	if (commandName.equals("hidename")){
-    	if(args.length>0){
-    		Player player = Bukkit.getServer().getPlayer(args[0]);
-    		SpoutPlayer splayer = (SpoutPlayer) player;
-    		splayer.hideTitle();
-    	}
-    	else{
-    		Player player = (Player) sender;
-    		SpoutPlayer splayer = (SpoutPlayer) player;
-    		splayer.hideTitle();
-    	}
+    	splayer.hideTitle();
     	return true;
 	}
 	if (commandName.equals("setchar")){
-		Player player;
-    	if(args.length>1){
-    		player = Bukkit.getServer().getPlayer(args[0]);
-    	}
-    	else{
-    		player = (Player) sender;
-    	}
-		SpoutPlayer splayer = (SpoutPlayer)player;
-		if(plugin.characters.getString("Characters." + args[0] + ".Name")!=null){
-			if(plugin.characters.getString("Characters." + args[0] + ".Name").equals("none"))
+		if(plugin.characters.getString("Characters." + URL + ".Name")!=null){
+			if(plugin.characters.getString("Characters." + URL + ".Name").equals("none"))
 			{
 				splayer.hideTitle();
 			}else{
-				splayer.setTitle(plugin.characters.getString("Characters." + args[0] + ".Name"));
+				splayer.setTitle(plugin.characters.getString("Characters." + URL + ".Name"));
 			}
 		}
-		if(plugin.characters.getString("Characters." + args[0] + ".Skin")!=null)
-			splayer.setSkin(plugin.characters.getString("Characters." + args[0] + ".Skin"));
-		if(plugin.characters.getString("Characters." + args[0] + ".Cape")!=null)
-			splayer.setCape(plugin.characters.getString("Characters." + args[0] + ".Cape"));
+		if(plugin.characters.getString("Characters." + URL + ".Skin")!=null)
+			splayer.setSkin(plugin.characters.getString("Characters." + URL + ".Skin"));
+		if(plugin.characters.getString("Characters." + URL + ".Cape")!=null)
+			splayer.setCape(plugin.characters.getString("Characters." + URL + ".Cape"));
 		else
 			splayer.setCape(invis);
 		return true;
@@ -249,27 +160,11 @@ public class PlayerExecutor implements CommandExecutor {
 		return true;
 	}
 	if (commandName.equals("steve")){
-		Player player;
-    	if(args.length>1){
-    		player = Bukkit.getServer().getPlayer(args[0]);
-    	}
-    	else{
-    		player = (Player) sender;
-    	}
-		SpoutPlayer splayer = (SpoutPlayer)player;
 		splayer.setCape(invis);
 		splayer.setTitle("Steve");
 		splayer.setSkin("http://www.minecraft.net/images/char.png");
 	}
 	if (commandName.equals("hidecape")){
-		Player player;
-    	if(args.length>1){
-    		player = Bukkit.getServer().getPlayer(args[0]);
-    	}
-    	else{
-    		player = (Player) sender;
-    	}
-		SpoutPlayer splayer = (SpoutPlayer)player;
 		splayer.setCape(invis);
 	}        		
 	return false;
